@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crop Price Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>🌾 Crop Price Predictor</h1>
+
+<select id="crop">
+
+    <!-- Cereals -->
+    <option value="rice">Rice</option>
+    <option value="wheat">Wheat</option>
+    <option value="maize">Maize</option>
+    <option value="barley">Barley</option>
+    <option value="jowar">Jowar</option>
+    <option value="bajra">Bajra</option>
+
+    <!-- Cash crops -->
+    <option value="cotton">Cotton</option>
+    <option value="sugarcane">Sugarcane</option>
+
+    <!-- Oil seeds -->
+    <option value="groundnut">Groundnut</option>
+    <option value="soybean">Soybean</option>
+    <option value="mustard">Mustard</option>
+
+    <!-- Vegetables -->
+    <option value="potato">Potato</option>
+    <option value="onion">Onion</option>
+    <option value="tomato">Tomato</option>
+    <option value="chilli">Chilli</option>
+
+    <!-- Fruits -->
+    <option value="banana">Banana</option>
+    <option value="mango">Mango</option>
+    <option value="apple">Apple</option>
+    <option value="orange">Orange</option>
+
+</select>
+
+<button onclick="predictPrice()">Predict</button>
+
+<h2 id="result"></h2>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
