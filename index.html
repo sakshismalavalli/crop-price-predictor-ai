@@ -1,80 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crop Price Predictor AI</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+let history = [];
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
+async function predictPrice() {
+    try {
+        const crop = document.getElementById("crop").value;
 
-    <div class="container">
+        const response = await fetch("https://your-app.onrender.com/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ crop: crop })
+        });
 
-        <h1>🌾 Crop Price Predictor AI</h1>
+        const data = await response.json();
 
-        <h3>Select Crop</h3>
+        document.getElementById("result").innerText =
+            "Predicted Price: " + data.price;
 
-        <select id="crop">
-            <option value="rice">Rice</option>
-            <option value="wheat">Wheat</option>
-            <option value="maize">Maize</option>
-            <option value="barley">Barley</option>
-            <option value="tomato">Tomato</option>
-            <option value="onion">Onion</option>
-            <option value="potato">Potato</option>
-            <option value="carrot">Carrot</option>
-            <option value="cabbage">Cabbage</option>
-            <option value="cauliflower">Cauliflower</option>
-            <option value="brinjal">Brinjal</option>
-            <option value="cucumber">Cucumber</option>
-            <option value="spinach">Spinach</option>
-            <option value="mango">Mango</option>
-            <option value="banana">Banana</option>
-            <option value="grapes">Grapes</option>
-            <option value="apple">Apple</option>
-            <option value="orange">Orange</option>
-            <option value="papaya">Papaya</option>
-            <option value="guava">Guava</option>
-            <option value="pomegranate">Pomegranate</option>
-            <option value="ginger">Ginger</option>
-            <option value="turmeric">Turmeric</option>
-            <option value="chilli">Chilli</option>
-            <option value="garlic">Garlic</option>
-            <option value="cotton">Cotton</option>
-            <option value="sugarcane">Sugarcane</option>
-            <option value="coconut">Coconut</option>
-        </select>
+        if (data.price > 50) {
+            document.getElementById("recommendation").innerText =
+                "Good market price, consider selling now";
+        } else {
+            document.getElementById("recommendation").innerText =
+                "Price is moderate, you may wait for better rates";
+        }
 
-        <br><br>
+        history.push(data.price);
 
-        <button onclick="showPrice()">🚀 Predict Price</button>
+        document.getElementById("history").innerHTML =
+            history.map(p => `<li>${p}</li>`).join("");
 
-        <h3 id="weather">☁ Weather Loading...</h3>
+    } catch (error) {
+        document.getElementById("result").innerText =
+            "Server not running or error";
 
-        <h2 id="result"></h2>
-
-        <div class="card">
-            <h3>🤖 AI Recommendation</h3>
-            <p id="recommendation">Waiting for prediction...</p>
-        </div>
-
-        <div class="card">
-            <h3>📈 Prediction History</h3>
-            <ul id="history"></ul>
-        </div>
-
-    </div>
-
-    <script src="script.js"></script>
-
-</body>
-</html>
-<footer>
-    <p>© 2026 Crop Price Predictor AI</p>
-</footer>
+        console.log(error);
+    }
+}
