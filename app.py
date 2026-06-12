@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask cors import CORS
+from flask_cors import CORS
 import pickle
 
 app = Flask(__name__)
@@ -9,13 +9,11 @@ model, le = pickle.load(open("model.pkl", "rb"))
 
 @app.route("/predict", methods=["POST"])
 def predict():
-
     data = request.json
     crop = data["crop"].lower().strip()
 
     try:
         crop_encoded = le.transform([crop])[0]
-
         prediction = model.predict([[crop_encoded]])
 
         return jsonify({
@@ -23,9 +21,7 @@ def predict():
         })
 
     except Exception as e:
-        return jsonify({
-            "error": str(e)
-        })
+        return jsonify({"error": str(e)})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
