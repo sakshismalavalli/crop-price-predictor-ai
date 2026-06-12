@@ -5,26 +5,21 @@ import pickle
 app = Flask(__name__)
 CORS(app)
 
-# SAFE LOAD
 model, le = pickle.load(open("model.pkl", "rb"))
 
 @app.route("/")
 def home():
-    return "Crop Price Predictor API is running"
+    return render_template("index.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    try:
-        data = request.json
-        crop = data.get("crop", "").lower().strip()
+    data = request.get_json()
+    crop = data["crop"].lower().strip()
 
-        crop_encoded = le.transform([crop])[0]
-        prediction = model.predict([[crop_encoded]])
+    crop_encoded = le.transform([crop])[0]
+    prediction = model.predict([[crop_encoded]])
 
-        return jsonify({"price": float(prediction[0])})
-
-    except Exception as e:
-        return jsonify({"error": str(e)})
+    return jsonify({"price": float(prediction[0])})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
