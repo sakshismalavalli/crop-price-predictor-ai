@@ -7,21 +7,21 @@ CORS(app)
 
 model, le = pickle.load(open("model.pkl", "rb"))
 
+@app.route("/")
+def home():
+    return "Crop Price Predictor API is running"
+
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.json
     crop = data["crop"].lower().strip()
 
-    try:
-        crop_encoded = le.transform([crop])[0]
-        prediction = model.predict([[crop_encoded]])
+    crop_encoded = le.transform([crop])[0]
+    prediction = model.predict([[crop_encoded]])
 
-        return jsonify({
-            "price": round(float(prediction[0]))
-        })
-
-    except Exception as e:
-        return jsonify({"error": str(e)})
+    return jsonify({
+        "price": round(float(prediction[0]))
+    })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
