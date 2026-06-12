@@ -1,50 +1,24 @@
-let history = [];
+async function predictPrice() {
+    const crop = document.getElementById("crop").value;
 
-async function showPrice() {
+    const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ crop: crop })
+    });
 
-    let crop = document.getElementById("crop").value;
+    const data = await response.json();
 
-    try {
+    document.getElementById("result").innerText =
+        "Predicted Price: " + data.price;
 
-        let response = await fetch("http://127.0.0.1:5000/predict", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                crop: crop
-            })
-        });
-
-        let data = await response.json();
-
-        if (data.error) {
-            document.getElementById("result").innerText =
-                "Error: " + data.error;
-            return;
-        }
-
-        document.getElementById("result").innerText =
-            "AI Price: ₹" + data.price;
-
-        if (data.price > 100) {
-            document.getElementById("recommendation").innerText =
-                "Good market price. Consider selling now.";
-        } else {
-            document.getElementById("recommendation").innerText =
-                "Price is moderate. You may wait for better rates.";
-        }
-
-        history.push(data.price);
-
-        document.getElementById("history").innerHTML =
-            history.map(price => `<li>₹${price}</li>`).join("");
-
-    } catch (error) {
-
-        document.getElementById("result").innerText =
-            "Server not running or error";
-
-        console.log(error);
+    if (data.price > 50) {
+        document.getElementById("recommendation").innerText =
+            "Good market price, consider selling now";
+    } else {
+        document.getElementById("recommendation").innerText =
+            "Price is low, wait for better rates";
     }
 }
