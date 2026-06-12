@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import pickle
 
@@ -9,7 +9,7 @@ model, le = pickle.load(open("model.pkl", "rb"))
 
 @app.route("/")
 def home():
-    return "Crop Price Predictor API is running"
+    return render_template("index.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():
